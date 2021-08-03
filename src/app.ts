@@ -57,4 +57,4 @@ app.use((_: Request, res: Response, __: NextFunction) => {
     });
 });
 
-app.listen(port, () => logging.info(NAMESPACE, `Server is running ${config.server.hostname}:${config.server.port}`));
+module.exports = app.listen(port, () => logging.info(NAMESPACE, `Server is running ${config.server.hostname}:${config.server.port}`));
