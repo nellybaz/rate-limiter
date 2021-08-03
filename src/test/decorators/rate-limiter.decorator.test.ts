@@ -80,4 +80,26 @@ describe('Rate Limiter', () => {
                 });
         }, 3000);
     });
+
+     it('returns 429 when limit reached for the month', (done) => {
+         chai.request(app)
+             .post('/say/month')
+             .send({ user: '1269' })
+             .end(function (err: any, res: any) {
+                 expect(err).to.be.null;
+                 expect(res).to.have.property('statusCode').to.eq(200);
+             });
+
+         setTimeout(() => {
+             chai.request(app)
+                 .post('/say/month')
+                 .send({ user: '1269' })
+                 .end(function (err: any, res: any) {
+                     expect(err).to.be.null;
+                     expect(res).to.have.property('statusCode').to.eq(429);
+                     expect(res).to.have.property('body').to.have.property('message').to.eq('limit exceeded');
+                     done();
+                 });
+         }, 3000);
+     });
 });

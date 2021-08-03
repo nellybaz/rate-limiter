@@ -24,4 +24,11 @@ export class SayController {
     post(req: any, res: any) {
         return res.status(200).json({ message: 'ok' });
     }
+
+    @rateLimit({ durationUnit: Duration.sec, limit: 10, duration: 1 })
+    @rateLimit({ durationUnit: Duration.month, limit: 1, duration: 1 })
+    @httpPost('/month')
+    month(req: any, res: any) {
+        return res.status(200).json({ message: 'ok' });
+    }
 }

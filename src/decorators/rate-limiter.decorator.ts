@@ -36,10 +36,11 @@ export function rateLimit(options: IRateLimitOptions) {
             const request: Request = arguments[0];
             const response: Response = arguments[1];
 
+            // ideally, a userId is gotten from the jwt or any other auth service used
             const user = RateLimit.getUserKey(request.body.user || 'default', options);
             const userLimit = options.limit;
             const that = this;
-            const expiry = RateLimit.getExpiry(options);
+            const expiry = RateLimit.getExpiry(user, options);
             return new Promise(async (resolve, _) => {
                 try {
                     const reply = await client.get(user);

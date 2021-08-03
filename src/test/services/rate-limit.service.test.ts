@@ -5,14 +5,15 @@ import { RateLimit } from '../../services/rate-limit.service';
 describe('Rate limit expiry', () => {
     it('returns rate limit for seconds', () => {
         const options: IRateLimitOptions = { duration: 3, limit: 1, durationUnit: Duration.sec };
-        const actual = RateLimit.getExpiry(options);
+        const actual = RateLimit.getExpiry("", options);
         expect(actual).to.eq(3 * 1000);
     });
 
     it('returns rate limit for months', () => {
+        const monthlyLimit = 300;
         const options: IRateLimitOptions = { duration: 3, limit: 1, durationUnit: Duration.month };
-        const actual = RateLimit.getExpiry(options);
-        expect(actual).to.eq(60 * 60 * 24 * 30 * 3 * 1000);
+        const actual = RateLimit.getExpiry("", options);
+        expect(actual).to.eq(60 * 60 * 24 * 30 * monthlyLimit * 1000);
     });
 });
 
