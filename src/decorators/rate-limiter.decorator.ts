@@ -1,22 +1,28 @@
-import { Request, Response } from "express";
-let count = 0;
+import { Request, Response } from 'express';
+const userMap = new Map();
 
-export function rateLimit (){
-  return (target:any, propertyKey: PropertyKey, descriptor: TypedPropertyDescriptor<any>) => {
-    const originalFunc = descriptor.value;
-    descriptor.value = function(): any{
-      // return 'hi there';
-      const request:Request = arguments[0];
-      const response:Response = arguments[1];
-      
-      if(request.method.toUpperCase() == 'POST'){
-        
-        count +=1;
+export interface IRateLimit {
+    limit: number;
+}
 
-        if(count > 1) return response.status(429).json({message:'limit exceeded'})
-      }
-      originalFunc.apply(this, [request, response])
-    }
-    return descriptor;
-  }
+export function rateLimit(limit: IRateLimit) {
+    return (target: any, propertyKey: PropertyKey, descriptor: TypedPropertyDescriptor<any>) => {
+        const originalFunc = descriptor.value;
+        descriptor.value = function (): any {
+            const request: Request = arguments[0];
+            const response: Response = arguments[1];
+
+            const user = request.body.user;
+
+            if (userMap.has(user)) {
+                const userCount = userMap.get(user);
+                if (userCount >= limit.limit) return response.status(429).json({ message: 'limit exceeded' });
+                userMap.set(user, userCount + 1);
+            } else {
+                userMap.set(user, 1);
+            }
+            originalFunc.apply(this, [request, response]);
+        };
+        return descriptor;
+    };
 }

@@ -7,13 +7,13 @@ import { rateLimit } from '../decorators/rate-limiter.decorator';
 export class SayController {
     constructor() {}
 
-    @rateLimit()
+    @rateLimit({ limit: 1 })
     @httpGet('/')
     sayHi(req: any, res: any) {
         return res.status(200).json({ message: 'ok' });
     }
 
-    @rateLimit()
+    @rateLimit({ limit: 1 })
     @httpPost('/')
     post(req: any, res: any) {
         return res.status(200).json({ message: 'ok' });

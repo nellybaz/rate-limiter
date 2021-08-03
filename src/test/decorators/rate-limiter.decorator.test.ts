@@ -20,7 +20,7 @@ describe('Rate Limiter', () => {
     it('returns 429 error for too many request per second', () => {
         chai.request(app)
             .post('/say')
-            .send({ user: '123', })
+            .send({ user: '123' })
             .end(function (err: any, res: any) {
                 expect(err).to.be.null;
                 expect(res).to.have.property('statusCode').to.eq(200);
@@ -32,6 +32,24 @@ describe('Rate Limiter', () => {
             .end(function (err: any, res: any) {
                 expect(err).to.be.null;
                 expect(res).to.have.property('statusCode').to.eq(429);
+            });
+    });
+
+    it('process requests for different users', () => {
+        chai.request(app)
+            .post('/say')
+            .send({ user: '124' })
+            .end(function (err: any, res: any) {
+                expect(err).to.be.null;
+                expect(res).to.have.property('statusCode').to.eq(200);
+            });
+
+        chai.request(app)
+            .post('/say')
+            .send({ user: '125' })
+            .end(function (err: any, res: any) {
+                expect(err).to.be.null;
+                expect(res).to.have.property('statusCode').to.eq(200);
             });
     });
 });
