@@ -32,6 +32,7 @@ describe('Rate Limiter', () => {
             .end(function (err: any, res: any) {
                 expect(err).to.be.null;
                 expect(res).to.have.property('statusCode').to.eq(429);
+                expect(res).to.have.property('body').to.have.property('message').to.eq('limit exceeded');
             });
     });
 
@@ -52,4 +53,24 @@ describe('Rate Limiter', () => {
                 expect(res).to.have.property('statusCode').to.eq(200);
             });
     });
+
+
+    it('process requests limit more than 1', () => {
+        chai.request(app)
+            .get('/say/limit2')
+            .send({ user: '126' })
+            .end(function (err: any, res: any) {
+                expect(err).to.be.null;
+                expect(res).to.have.property('statusCode').to.eq(200);
+            });
+
+        chai.request(app)
+            .get('/say/limit2')
+            .send({ user: '126' })
+            .end(function (err: any, res: any) {
+                expect(err).to.be.null;
+                expect(res).to.have.property('statusCode').to.eq(200);
+            });
+    });
+
 });

@@ -13,6 +13,12 @@ export class SayController {
         return res.status(200).json({ message: 'ok' });
     }
 
+    @rateLimit({ limit: 2 })
+    @httpGet('/limit2')
+    limit2(req: any, res: any) {
+        return res.status(200).json({ message: 'ok' });
+    }
+
     @rateLimit({ limit: 1 })
     @httpPost('/')
     post(req: any, res: any) {
