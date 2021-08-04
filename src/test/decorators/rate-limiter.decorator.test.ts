@@ -82,18 +82,20 @@ describe('Rate Limiter', () => {
     });
 
      it('returns 429 when limit reached for the month', (done) => {
+         const user = new Date().toUTCString();
          chai.request(app)
              .post('/say/month')
-             .send({ user: '1269' })
+             .send({ user })
              .end(function (err: any, res: any) {
                  expect(err).to.be.null;
                  expect(res).to.have.property('statusCode').to.eq(200);
+                //  done();
              });
 
          setTimeout(() => {
              chai.request(app)
                  .post('/say/month')
-                 .send({ user: '1269' })
+                 .send({ user })
                  .end(function (err: any, res: any) {
                      expect(err).to.be.null;
                      expect(res).to.have.property('statusCode').to.eq(429);
